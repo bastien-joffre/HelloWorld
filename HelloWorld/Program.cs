@@ -10,9 +10,9 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-            Message message = new Message();
+            Message message = new Message(9, 13, 18);
 
-            String input;
+            string input;
             do {
                 Console.WriteLine("Appuyez sur entrée pour votre message, tappez 'exit' pour quitter");
                 input = Console.ReadLine();

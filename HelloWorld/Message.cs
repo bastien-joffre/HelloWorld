@@ -6,14 +6,25 @@ using System.Threading.Tasks;
 
 namespace HelloWorld
 {
-    class Message
+    public class Message
     {
-        int morningTime;
-        int middayTime;
-        int eveningTime;
+        private IEnvironmentVariable _environmentVariable;
+        private IDate _date;
 
-        public Message(int morningTime = 9, int middayTime = 13, int eveningTime = 18)
+        private int morningTime;
+        private int middayTime;
+        private int eveningTime;
+
+        public Message(int morningTime, int middayTime, int eveningTime)
+            : this(new EnvironmentVariables(), new Date(), morningTime, middayTime, eveningTime)
         {
+        }
+
+        internal Message(IEnvironmentVariable environmentVariable, IDate date, int morningTime, int middayTime, int eveningTime)
+        {
+            _environmentVariable = environmentVariable;
+            _date = date;
+
             this.morningTime = morningTime;
             this.middayTime = middayTime;
             this.eveningTime = eveningTime;
@@ -21,17 +32,15 @@ namespace HelloWorld
 
         public string getHelloMessage()
         {
-            string me = Environment.UserName;
-            me = me.Replace(".", " ");
+            string me = _environmentVariable.getUserName();
+            int hour = _date.getHour();
+            int dayOfWeek = _date.getDayOfWeek();
 
-            DateTime now = DateTime.Now;
-            int dayOfWeekIndex = (int)now.DayOfWeek;
-
-            if ((dayOfWeekIndex == 1 ? now.Hour >= this.morningTime : dayOfWeekIndex > 0) &&
-                (dayOfWeekIndex == 5 ? now.Hour < this.eveningTime : dayOfWeekIndex < 5))
-                if (now.Hour >= morningTime && now.Hour < this.middayTime)
+            if ((dayOfWeek == 1 ? hour >= this.morningTime : dayOfWeek > 0) &&
+                (dayOfWeek == 5 ? hour < this.eveningTime : dayOfWeek < 5))
+                if (hour >= morningTime && hour < this.middayTime)
                     return $"Bonjour {me}";
-                else if (now.Hour >= this.middayTime && now.Hour < this.eveningTime)
+                else if (hour >= this.middayTime && hour < this.eveningTime)
                     return $"Bon après-midi {me}";
                 else
                     return $"Bonsoir {me}";
